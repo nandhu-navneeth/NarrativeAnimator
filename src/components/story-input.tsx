@@ -19,7 +19,7 @@ export function StoryInput() {
       <CardHeader>
         <CardTitle className="font-headline">Your Story</CardTitle>
         <CardDescription>
-          Enter your story, scene, or narrative below. Each paragraph will be
+          Enter your story, scene, or narrative below. Each sentence will be
           treated as a separate scene.
         </CardDescription>
       </CardHeader>
