@@ -23,6 +23,11 @@ interface AppContextType {
   >;
   selectedMusic: string;
   setSelectedMusic: React.Dispatch<React.SetStateAction<string>>;
+  isMoviePlaying: boolean;
+  startMovie: () => void;
+  stopMovie: () => void;
+  currentSceneIndex: number;
+  setCurrentSceneIndex: React.Dispatch<React.SetStateAction<number>>;
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
@@ -39,13 +44,16 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     narrationPrompt: DEFAULT_NARRATION_PROMPT,
   });
   const [selectedMusic, setSelectedMusic] = useState('epic-cinematic');
+  const [isMoviePlaying, setIsMoviePlaying] = useState(false);
+  const [currentSceneIndex, setCurrentSceneIndex] = useState(0);
+
 
   const setStory = useCallback((newStory: string) => {
     setStoryState(newStory);
     const sceneTexts = newStory.match(/[^.!?]+[.!?]+/g) || [];
     setScenes(
       sceneTexts.map((text, index) => ({
-        id: `scene-${index}`, // Use stable index for ID
+        id: `scene-${index}`,
         text: text.trim(),
         isImageLoading: false,
         isNarrationLoading: false,
@@ -63,6 +71,16 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     },
     []
   );
+  
+  const startMovie = useCallback(() => {
+    setCurrentSceneIndex(0);
+    setIsMoviePlaying(true);
+  }, []);
+
+  const stopMovie = useCallback(() => {
+    setIsMoviePlaying(false);
+  }, []);
+
 
   const value = useMemo(
     () => ({
@@ -74,8 +92,13 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       setAiSettings,
       selectedMusic,
       setSelectedMusic,
+      isMoviePlaying,
+      startMovie,
+      stopMovie,
+      currentSceneIndex,
+      setCurrentSceneIndex,
     }),
-    [story, scenes, aiSettings, selectedMusic, setStory, updateScene]
+    [story, scenes, aiSettings, selectedMusic, setStory, updateScene, isMoviePlaying, startMovie, stopMovie, currentSceneIndex]
   );
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;

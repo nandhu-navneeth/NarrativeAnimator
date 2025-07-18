@@ -16,6 +16,7 @@ import {
   Loader2,
   Maximize,
   Sparkles,
+  Volume2,
   X,
 } from 'lucide-react';
 import NextImage from 'next/image';
@@ -28,7 +29,7 @@ interface StoryboardItemProps {
 }
 
 export function StoryboardItem({ scene, index }: StoryboardItemProps) {
-  const { updateScene, aiSettings } = useApp();
+  const { updateScene, aiSettings, isMoviePlaying } = useApp();
   const { toast } = useToast();
   const audioRef = useRef<HTMLAudioElement>(null);
   const [isFullScreen, setIsFullScreen] = useState(false);
@@ -103,15 +104,17 @@ export function StoryboardItem({ scene, index }: StoryboardItemProps) {
       window.addEventListener('keydown', handleKeyDown);
     } else {
       document.body.style.overflow = 'auto';
-      audioRef.current?.pause();
-      if(audioRef.current) audioRef.current.currentTime = 0;
+      if (!isMoviePlaying && audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current.currentTime = 0;
+      }
     }
 
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
       document.body.style.overflow = 'auto';
     };
-  }, [isFullScreen]);
+  }, [isFullScreen, isMoviePlaying]);
 
   return (
     <>
@@ -175,20 +178,22 @@ export function StoryboardItem({ scene, index }: StoryboardItemProps) {
                   </Button>
                 )}
               </div>
-              {scene.narrationUrl && !scene.isNarrationLoading && (
-                <audio
-                  controls
-                  src={scene.narrationUrl}
-                  className="w-full"
-                  ref={audioRef}
-                />
-              )}
               {scene.isNarrationLoading && (
                 <div className="flex items-center gap-2 text-sm text-muted-foreground w-full pt-2">
                   <Loader2 className="h-4 w-4 animate-spin" />
                   <span>Generating audio... This may take a moment.</span>
                 </div>
               )}
+               {scene.narrationUrl && !scene.isNarrationLoading && !isMoviePlaying && (
+                 <audio controls src={scene.narrationUrl} className="w-full" ref={audioRef} />
+               )}
+               {scene.narrationUrl && !scene.isNarrationLoading && isMoviePlaying && (
+                 <div className="flex items-center gap-2 text-sm text-muted-foreground w-full pt-2">
+                   <Volume2 className="h-4 w-4" />
+                   <span>Audio ready for movie playback.</span>
+                   <audio src={scene.narrationUrl} ref={audioRef} preload="auto" />
+                 </div>
+               )}
             </CardFooter>
           </div>
         </div>
