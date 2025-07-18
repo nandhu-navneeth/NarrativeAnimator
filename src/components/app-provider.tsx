@@ -45,7 +45,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     const sceneTexts = newStory.match(/[^.!?]+[.!?]+/g) || [];
     setScenes(
       sceneTexts.map((text, index) => ({
-        id: `scene-${index}`, // Removed Date.now()
+        id: `scene-${index}`, // Use stable index for ID
         text: text.trim(),
         isImageLoading: false,
         isNarrationLoading: false,
