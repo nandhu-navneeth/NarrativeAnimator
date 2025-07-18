@@ -67,7 +67,7 @@ export function StoryboardItem({ scene, index }: StoryboardItemProps) {
   return (
     <Card className="overflow-hidden shadow-lg">
       <div className="grid grid-cols-1 lg:grid-cols-2">
-        <div className="relative aspect-video bg-muted/30 flex items-center justify-center border-b lg:border-b-0 lg:border-r">
+        <div className="relative aspect-video bg-muted/30 flex items-center justify-center border-b lg:border-b-0 lg:border-r overflow-hidden">
           {scene.isImageLoading ? (
             <div className="flex flex-col items-center gap-2 text-muted-foreground">
               <Loader2 className="h-8 w-8 animate-spin" />
@@ -81,7 +81,7 @@ export function StoryboardItem({ scene, index }: StoryboardItemProps) {
                 50
               )}...`}
               fill
-              className="object-cover"
+              className="object-cover animate-ken-burns"
               sizes="(max-width: 1024px) 100vw, 50vw"
             />
           ) : (
