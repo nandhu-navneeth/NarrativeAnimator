@@ -89,21 +89,17 @@ body {
 
 @layer utilities {
   .animate-ken-burns {
-    animation: ken-burns 15s ease-in-out infinite both;
+    animation: ken-burns 20s ease-in-out infinite alternate both;
   }
 
   @keyframes ken-burns {
     0% {
-      transform: scale(1) translate(0%, 0%);
-      transform-origin: center center;
-    }
-    50% {
-      transform: scale(1.1) translate(-2%, 2%);
-      transform-origin: center center;
+      transform: scale(1.1) translate(-5%, 5%);
+      transform-origin: 0% 0%;
     }
     100% {
-      transform: scale(1) translate(0%, 0%);
-      transform-origin: center center;
+      transform: scale(1.25) translate(5%, -5%);
+      transform-origin: 100% 100%;
     }
   }
 }
