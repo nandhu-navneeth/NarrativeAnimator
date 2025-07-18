@@ -34,7 +34,7 @@ export function MoviePlayer() {
       audioRef.current.src = currentScene.narrationUrl;
       audioRef.current.load();
       audioRef.current.play().catch(e => console.error('Audio playback failed', e));
-      if (musicRef.current) {
+      if (musicRef.current && selectedMusic !== 'no-music') {
         musicRef.current.volume = 0.3;
         musicRef.current.play().catch(e => console.error('Music playback failed', e));
       }
@@ -43,7 +43,7 @@ export function MoviePlayer() {
       if(audioRef.current) audioRef.current.pause();
       if(musicRef.current) musicRef.current.pause();
     }
-  }, [isMoviePlaying, currentScene, currentSceneIndex]);
+  }, [isMoviePlaying, currentScene, currentSceneIndex, selectedMusic]);
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -68,13 +68,13 @@ export function MoviePlayer() {
   }, [isMoviePlaying, stopMovie]);
   
   const togglePause = () => {
-    if (audioRef.current && musicRef.current) {
+    if (audioRef.current) {
       if(isPaused) {
         audioRef.current.play();
-        musicRef.current.play();
+        if (musicRef.current) musicRef.current.play();
       } else {
         audioRef.current.pause();
-        musicRef.current.pause();
+        if (musicRef.current) musicRef.current.pause();
       }
       setIsPaused(!isPaused);
     }
