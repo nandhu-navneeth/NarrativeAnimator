@@ -115,7 +115,7 @@ export function StoryboardItem({ scene, index }: StoryboardItemProps) {
 
   return (
     <>
-      <Card className="overflow-hidden shadow-lg">
+      <Card className="overflow-hidden shadow-lg bg-card/50">
         <div className="grid grid-cols-1 md:grid-cols-2">
           <div className="relative aspect-video bg-muted/30 flex items-center justify-center border-b md:border-b-0 md:border-r overflow-hidden">
             {scene.isImageLoading ? (

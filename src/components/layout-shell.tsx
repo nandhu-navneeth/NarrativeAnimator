@@ -40,7 +40,7 @@ export function LayoutShell() {
     <SidebarProvider>
       <div className="min-h-screen bg-background font-body text-foreground">
         <Sidebar side="left" collapsible="icon">
-          <SidebarHeader className="items-center border-b border-sidebar-border p-2 h-20">
+          <SidebarHeader className="items-center border-b p-2 h-20">
             <div className="flex items-center gap-2">
               <Clapperboard className="h-7 w-7 text-primary" />
               <span className="font-bold text-xl font-headline">
@@ -69,7 +69,7 @@ export function LayoutShell() {
               </SidebarGroupContent>
             </SidebarGroup>
           </SidebarContent>
-          <SidebarFooter className="p-2">
+          <SidebarFooter className="p-2 border-t">
             <Button className="w-full" disabled>
               <Film className="mr-2 h-4 w-4" />
               <span>Render Movie</span>
