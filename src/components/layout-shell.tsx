@@ -2,7 +2,7 @@
 import { StoryInput } from '@/components/story-input';
 import { Storyboard } from '@/components/storyboard';
 import { Separator } from '@/components/ui/separator';
-import { Clapperboard } from 'lucide-react';
+import { Clapperboard, SlidersHorizontal } from 'lucide-react';
 import { SettingsPanel } from '@/components/settings-panel';
 import { AudioSelection } from '@/components/audio-selection';
 import {
@@ -10,6 +10,12 @@ import {
   ResizablePanel,
   ResizablePanelGroup,
 } from '@/components/ui/resizable';
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from '@/components/ui/accordion';
 
 function AppHeader() {
   return (
@@ -33,10 +39,21 @@ export function LayoutShell() {
           <div className="flex flex-col h-full overflow-y-auto">
             <main className="flex-1 flex flex-col gap-6 p-4 md:p-6">
               <StoryInput />
-              <Separator />
-              <SettingsPanel />
-              <Separator />
-              <AudioSelection />
+              <Accordion type="single" collapsible className="w-full">
+                <AccordionItem value="item-1">
+                  <AccordionTrigger className="text-sm font-medium hover:no-underline">
+                    <div className="flex items-center gap-2">
+                      <SlidersHorizontal className="h-4 w-4" />
+                      Advanced Settings
+                    </div>
+                  </AccordionTrigger>
+                  <AccordionContent className="space-y-6 pt-4">
+                    <SettingsPanel />
+                    <Separator />
+                    <AudioSelection />
+                  </AccordionContent>
+                </AccordionItem>
+              </Accordion>
             </main>
           </div>
         </ResizablePanel>
