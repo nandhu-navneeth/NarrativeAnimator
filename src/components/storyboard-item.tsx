@@ -116,8 +116,8 @@ export function StoryboardItem({ scene, index }: StoryboardItemProps) {
   return (
     <>
       <Card className="overflow-hidden shadow-lg">
-        <div className="grid grid-cols-1 lg:grid-cols-2">
-          <div className="relative aspect-video bg-muted/30 flex items-center justify-center border-b lg:border-b-0 lg:border-r overflow-hidden">
+        <div className="grid grid-cols-1 md:grid-cols-2">
+          <div className="relative aspect-video bg-muted/30 flex items-center justify-center border-b md:border-b-0 md:border-r overflow-hidden">
             {scene.isImageLoading ? (
               <div className="flex flex-col items-center gap-2 text-muted-foreground">
                 <Loader2 className="h-8 w-8 animate-spin" />
@@ -132,7 +132,7 @@ export function StoryboardItem({ scene, index }: StoryboardItemProps) {
                 )}...`}
                 fill
                 className="object-cover animate-ken-burns"
-                sizes="(max-width: 1024px) 100vw, 50vw"
+                sizes="(max-width: 768px) 100vw, 50vw"
               />
             ) : (
               <div className="flex flex-col items-center gap-2 text-muted-foreground">
@@ -141,7 +141,7 @@ export function StoryboardItem({ scene, index }: StoryboardItemProps) {
               </div>
             )}
           </div>
-          <div className="flex flex-col p-6">
+          <div className="flex flex-col p-4 md:p-6">
             <CardHeader className="p-0 mb-4">
               <CardTitle className="font-headline text-xl">
                 Scene {index + 1}
@@ -151,10 +151,11 @@ export function StoryboardItem({ scene, index }: StoryboardItemProps) {
               <p className="text-foreground/80 leading-relaxed">{scene.text}</p>
             </CardContent>
             <CardFooter className="p-0 flex flex-col items-start gap-4 mt-auto">
-              <div className="flex w-full flex-wrap items-center gap-4">
+              <div className="flex w-full flex-wrap items-center gap-2 md:gap-4">
                 <Button
                   onClick={handleGenerateScene}
                   disabled={scene.isImageLoading || scene.isNarrationLoading}
+                  size="sm"
                 >
                   {scene.isImageLoading || scene.isNarrationLoading ? (
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -167,6 +168,7 @@ export function StoryboardItem({ scene, index }: StoryboardItemProps) {
                   <Button
                     variant="secondary"
                     onClick={() => setIsFullScreen(true)}
+                     size="sm"
                   >
                     <Maximize className="mr-2 h-4 w-4" />
                     View Scene
@@ -210,8 +212,8 @@ export function StoryboardItem({ scene, index }: StoryboardItemProps) {
               className="object-contain animate-ken-burns"
               sizes="100vw"
             />
-            <div className="absolute bottom-10 left-0 right-0 p-4 flex justify-center">
-              <p className="text-white text-lg md:text-2xl font-bold bg-black/60 px-4 py-2 rounded-lg text-center max-w-4xl">
+            <div className="absolute bottom-4 md:bottom-10 left-0 right-0 p-4 flex justify-center">
+              <p className="text-white text-base md:text-2xl font-bold bg-black/60 px-4 py-2 rounded-lg text-center max-w-4xl">
                 {scene.text}
               </p>
             </div>

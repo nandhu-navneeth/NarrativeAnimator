@@ -24,10 +24,10 @@ import { Separator } from '@/components/ui/separator';
 function AppHeader() {
   return (
     <header className="sticky top-0 z-10 flex h-20 items-center gap-4 border-b bg-background/80 px-4 backdrop-blur-sm md:px-8">
-      <SidebarTrigger className="lg:hidden" />
+      <SidebarTrigger className="md:hidden" />
       <div className="flex-1">
-        <h1 className="text-2xl font-bold font-headline">My Storyboard</h1>
-        <p className="text-muted-foreground">
+        <h1 className="text-xl md:text-2xl font-bold font-headline">My Storyboard</h1>
+        <p className="text-sm text-muted-foreground">
           Bring your narrative to life, one scene at a time.
         </p>
       </div>

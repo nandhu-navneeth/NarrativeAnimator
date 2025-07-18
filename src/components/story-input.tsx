@@ -29,7 +29,7 @@ export function StoryInput() {
           <Textarea
             id="story-input"
             placeholder="Once upon a time in a land far, far away..."
-            className="min-h-[200px] text-base"
+            className="min-h-[150px] md:min-h-[200px] text-base"
             value={story}
             onChange={e => setStory(e.target.value)}
           />
