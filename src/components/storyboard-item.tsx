@@ -210,6 +210,11 @@ export function StoryboardItem({ scene, index }: StoryboardItemProps) {
               className="object-contain animate-ken-burns"
               sizes="100vw"
             />
+            <div className="absolute bottom-10 left-0 right-0 p-4 flex justify-center">
+              <p className="text-white text-lg md:text-2xl font-bold bg-black/60 px-4 py-2 rounded-lg text-center max-w-4xl">
+                {scene.text}
+              </p>
+            </div>
           </div>
         </div>
       )}
