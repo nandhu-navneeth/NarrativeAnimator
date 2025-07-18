@@ -42,11 +42,10 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
 
   const setStory = useCallback((newStory: string) => {
     setStoryState(newStory);
-    // Split the story into sentences. This regex handles various sentence endings.
     const sceneTexts = newStory.match(/[^.!?]+[.!?]+/g) || [];
     setScenes(
       sceneTexts.map((text, index) => ({
-        id: `scene-${index}-${Date.now()}`,
+        id: `scene-${index}`, // Removed Date.now()
         text: text.trim(),
         isImageLoading: false,
         isNarrationLoading: false,
