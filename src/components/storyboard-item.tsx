@@ -11,10 +11,16 @@ import {
 } from '@/components/ui/card';
 import { generateImagesAction, generateNarrationAction } from '@/lib/actions';
 import type { Scene } from '@/types';
-import { Image as ImageIcon, Loader2, Sparkles, Volume2, Wand2 } from 'lucide-react';
+import {
+  ImageIcon,
+  Loader2,
+  Maximize,
+  Sparkles,
+  X,
+} from 'lucide-react';
 import NextImage from 'next/image';
 import { useToast } from '@/hooks/use-toast';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 interface StoryboardItemProps {
   scene: Scene;
@@ -25,6 +31,7 @@ export function StoryboardItem({ scene, index }: StoryboardItemProps) {
   const { updateScene, aiSettings } = useApp();
   const { toast } = useToast();
   const audioRef = useRef<HTMLAudioElement>(null);
+  const [isFullScreen, setIsFullScreen] = useState(false);
 
   const handleGenerateScene = async () => {
     updateScene(index, { isImageLoading: true, isNarrationLoading: true });
@@ -70,11 +77,11 @@ export function StoryboardItem({ scene, index }: StoryboardItemProps) {
       updates.narrationUrl = narrationResult.data.media;
       updates.isNarrationLoading = false;
     }
-    
+
     updateScene(index, updates);
 
     if (!hadError && audioRef.current) {
-        audioRef.current.play().catch(e => console.error("Audio playback failed", e));
+      audioRef.current.play().catch(e => console.error('Audio playback failed', e));
     }
   };
 
@@ -84,69 +91,128 @@ export function StoryboardItem({ scene, index }: StoryboardItemProps) {
     }
   }, [scene.narrationUrl, scene.isNarrationLoading]);
 
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setIsFullScreen(false);
+      }
+    };
+    if (isFullScreen) {
+      document.body.style.overflow = 'hidden';
+      audioRef.current?.play().catch(e => console.error('Audio playback failed', e));
+      window.addEventListener('keydown', handleKeyDown);
+    } else {
+      document.body.style.overflow = 'auto';
+      audioRef.current?.pause();
+      if(audioRef.current) audioRef.current.currentTime = 0;
+    }
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      document.body.style.overflow = 'auto';
+    };
+  }, [isFullScreen]);
 
   return (
-    <Card className="overflow-hidden shadow-lg">
-      <div className="grid grid-cols-1 lg:grid-cols-2">
-        <div className="relative aspect-video bg-muted/30 flex items-center justify-center border-b lg:border-b-0 lg:border-r overflow-hidden">
-          {scene.isImageLoading ? (
-            <div className="flex flex-col items-center gap-2 text-muted-foreground">
-              <Loader2 className="h-8 w-8 animate-spin" />
-              <p>Generating visual...</p>
-            </div>
-          ) : scene.imageUrl ? (
-            <NextImage
-              src={scene.imageUrl}
-              alt={`AI generated image for scene: ${scene.text.substring(
-                0,
-                50
-              )}...`}
-              fill
-              className="object-cover animate-ken-burns"
-              sizes="(max-width: 1024px) 100vw, 50vw"
-            />
-          ) : (
-            <div className="flex flex-col items-center gap-2 text-muted-foreground">
-              <ImageIcon className="h-12 w-12" />
-              <p>No image generated yet</p>
-            </div>
-          )}
-        </div>
-        <div className="flex flex-col p-6">
-          <CardHeader className="p-0 mb-4">
-            <CardTitle className="font-headline text-xl">
-              Scene {index + 1}
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="flex-grow p-0 mb-6">
-            <p className="text-foreground/80 leading-relaxed">{scene.text}</p>
-          </CardContent>
-          <CardFooter className="p-0 flex flex-col items-start gap-4 mt-auto">
-            <div className="flex w-full flex-wrap items-center gap-4">
-              <Button
-                onClick={handleGenerateScene}
-                disabled={scene.isImageLoading || scene.isNarrationLoading}
-              >
-                {scene.isImageLoading || scene.isNarrationLoading ? (
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                ) : (
-                  <Sparkles className="mr-2 h-4 w-4" />
-                )}
-                Generate Scene
-              </Button>
-            </div>
-            {scene.narrationUrl && !scene.isNarrationLoading && (
-              <audio controls src={scene.narrationUrl} className="w-full" ref={audioRef} />
-            )}
-            {scene.isNarrationLoading && (
-              <div className="flex items-center gap-2 text-sm text-muted-foreground w-full pt-2">
-                <Loader2 className="h-4 w-4 animate-spin" />
-                <span>Generating audio... This may take a moment.</span>
+    <>
+      <Card className="overflow-hidden shadow-lg">
+        <div className="grid grid-cols-1 lg:grid-cols-2">
+          <div className="relative aspect-video bg-muted/30 flex items-center justify-center border-b lg:border-b-0 lg:border-r overflow-hidden">
+            {scene.isImageLoading ? (
+              <div className="flex flex-col items-center gap-2 text-muted-foreground">
+                <Loader2 className="h-8 w-8 animate-spin" />
+                <p>Generating visual...</p>
+              </div>
+            ) : scene.imageUrl ? (
+              <NextImage
+                src={scene.imageUrl}
+                alt={`AI generated image for scene: ${scene.text.substring(
+                  0,
+                  50
+                )}...`}
+                fill
+                className="object-cover animate-ken-burns"
+                sizes="(max-width: 1024px) 100vw, 50vw"
+              />
+            ) : (
+              <div className="flex flex-col items-center gap-2 text-muted-foreground">
+                <ImageIcon className="h-12 w-12" />
+                <p>No image generated yet</p>
               </div>
             )}
-          </CardFooter>
+          </div>
+          <div className="flex flex-col p-6">
+            <CardHeader className="p-0 mb-4">
+              <CardTitle className="font-headline text-xl">
+                Scene {index + 1}
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="flex-grow p-0 mb-6">
+              <p className="text-foreground/80 leading-relaxed">{scene.text}</p>
+            </CardContent>
+            <CardFooter className="p-0 flex flex-col items-start gap-4 mt-auto">
+              <div className="flex w-full flex-wrap items-center gap-4">
+                <Button
+                  onClick={handleGenerateScene}
+                  disabled={scene.isImageLoading || scene.isNarrationLoading}
+                >
+                  {scene.isImageLoading || scene.isNarrationLoading ? (
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  ) : (
+                    <Sparkles className="mr-2 h-4 w-4" />
+                  )}
+                  Generate Scene
+                </Button>
+                {scene.imageUrl && scene.narrationUrl && (
+                  <Button
+                    variant="secondary"
+                    onClick={() => setIsFullScreen(true)}
+                  >
+                    <Maximize className="mr-2 h-4 w-4" />
+                    View Scene
+                  </Button>
+                )}
+              </div>
+              {scene.narrationUrl && !scene.isNarrationLoading && (
+                <audio
+                  controls
+                  src={scene.narrationUrl}
+                  className="w-full"
+                  ref={audioRef}
+                />
+              )}
+              {scene.isNarrationLoading && (
+                <div className="flex items-center gap-2 text-sm text-muted-foreground w-full pt-2">
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                  <span>Generating audio... This may take a moment.</span>
+                </div>
+              )}
+            </CardFooter>
+          </div>
         </div>
-      </div>
-    </Card>
+      </Card>
+      {isFullScreen && scene.imageUrl && (
+        <div className="fixed inset-0 z-50 bg-black/90 flex items-center justify-center p-4">
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => setIsFullScreen(false)}
+            className="absolute top-4 right-4 text-white hover:bg-white/20 hover:text-white z-10"
+          >
+            <X className="h-8 w-8" />
+            <span className="sr-only">Close</span>
+          </Button>
+          <div className="relative w-full h-full">
+            <NextImage
+              src={scene.imageUrl}
+              alt={`Full screen image for scene: ${scene.text.substring(0, 50)}...`}
+              fill
+              className="object-contain animate-ken-burns"
+              sizes="100vw"
+            />
+          </div>
+        </div>
+      )}
+    </>
   );
 }
