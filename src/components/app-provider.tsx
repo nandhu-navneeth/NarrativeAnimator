@@ -21,8 +21,6 @@ interface AppContextType {
   setAiSettings: React.Dispatch<
     React.SetStateAction<{ imagePrompt: string; narrationPrompt: string }>
   >;
-  selectedMusic: string;
-  setSelectedMusic: React.Dispatch<React.SetStateAction<string>>;
   isMoviePlaying: boolean;
   startMovie: () => void;
   stopMovie: () => void;
@@ -43,7 +41,6 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     imagePrompt: DEFAULT_IMAGE_PROMPT,
     narrationPrompt: DEFAULT_NARRATION_PROMPT,
   });
-  const [selectedMusic, setSelectedMusic] = useState('epic-cinematic');
   const [isMoviePlaying, setIsMoviePlaying] = useState(false);
   const [currentSceneIndex, setCurrentSceneIndex] = useState(0);
 
@@ -53,7 +50,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     const sceneTexts = newStory.match(/[^.!?]+[.!?]+/g) || [];
     setScenes(
       sceneTexts.map((text, index) => ({
-        id: `scene-${index}`,
+        id: `scene-${Date.now()}-${index}`,
         text: text.trim(),
         isImageLoading: false,
         isNarrationLoading: false,
@@ -90,15 +87,13 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       updateScene,
       aiSettings,
       setAiSettings,
-      selectedMusic,
-      setSelectedMusic,
       isMoviePlaying,
       startMovie,
       stopMovie,
       currentSceneIndex,
       setCurrentSceneIndex,
     }),
-    [story, scenes, aiSettings, selectedMusic, setStory, updateScene, isMoviePlaying, startMovie, stopMovie, currentSceneIndex]
+    [story, scenes, aiSettings, setStory, updateScene, isMoviePlaying, startMovie, stopMovie, currentSceneIndex]
   );
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;

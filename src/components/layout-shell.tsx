@@ -1,10 +1,8 @@
 'use client';
 import { StoryInput } from '@/components/story-input';
 import { Storyboard } from '@/components/storyboard';
-import { Separator } from '@/components/ui/separator';
 import { Clapperboard, Film, SlidersHorizontal } from 'lucide-react';
 import { SettingsPanel } from '@/components/settings-panel';
-import { AudioSelection } from '@/components/audio-selection';
 import {
   ResizableHandle,
   ResizablePanel,
@@ -54,8 +52,6 @@ export function LayoutShell() {
                   </AccordionTrigger>
                   <AccordionContent className="space-y-6 pt-4">
                     <SettingsPanel />
-                    <Separator />
-                    <AudioSelection />
                   </AccordionContent>
                 </AccordionItem>
               </Accordion>

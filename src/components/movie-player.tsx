@@ -2,7 +2,7 @@
 'use client';
 import { useApp } from '@/components/app-provider';
 import { Button } from '@/components/ui/button';
-import { Loader2, Music2, Pause, Play, VolumeX, X } from 'lucide-react';
+import { Loader2, Pause, Play, X } from 'lucide-react';
 import NextImage from 'next/image';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
@@ -13,10 +13,8 @@ export function MoviePlayer() {
     stopMovie,
     currentSceneIndex,
     setCurrentSceneIndex,
-    selectedMusic
   } = useApp();
   const audioRef = useRef<HTMLAudioElement>(null);
-  const musicRef = useRef<HTMLAudioElement>(null);
   const [isPaused, setIsPaused] = useState(false);
 
   const currentScene = scenes[currentSceneIndex];
@@ -34,16 +32,12 @@ export function MoviePlayer() {
       audioRef.current.src = currentScene.narrationUrl;
       audioRef.current.load();
       audioRef.current.play().catch(e => console.error('Audio playback failed', e));
-      if (musicRef.current && selectedMusic !== 'no-music') {
-        musicRef.current.volume = 0.3;
-        musicRef.current.play().catch(e => console.error('Music playback failed', e));
-      }
       setIsPaused(false);
-    } else if (!isMoviePlaying) {
-      if(audioRef.current) audioRef.current.pause();
-      if(musicRef.current) musicRef.current.pause();
+    } else if (!isMoviePlaying && audioRef.current) {
+      audioRef.current.pause();
     }
-  }, [isMoviePlaying, currentScene, currentSceneIndex, selectedMusic]);
+  }, [isMoviePlaying, currentScene]);
+  
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -71,10 +65,8 @@ export function MoviePlayer() {
     if (audioRef.current) {
       if(isPaused) {
         audioRef.current.play();
-        if (musicRef.current) musicRef.current.play();
       } else {
         audioRef.current.pause();
-        if (musicRef.current) musicRef.current.pause();
       }
       setIsPaused(!isPaused);
     }
@@ -130,9 +122,6 @@ export function MoviePlayer() {
         </div>
       </div>
       <audio ref={audioRef} onEnded={handleNextScene} />
-      {selectedMusic !== 'no-music' && (
-         <audio ref={musicRef} src={`/music/${selectedMusic}.mp3`} loop />
-      )}
     </div>
   );
 }
